@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { AdsterraSocialBar } from "@/components/adsterra";
+// import { AdsterraSocialBar } from "@/components/adsterra";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -43,7 +43,7 @@ export default function RootLayout({
           src="https://cdn.jsdelivr.net/pyodide/v0.28.2/full/pyodide.js"
           strategy="beforeInteractive"
         />
-        <AdsterraSocialBar />
+        {/* <AdsterraSocialBar /> */}
       </body>
     </html>
   );
