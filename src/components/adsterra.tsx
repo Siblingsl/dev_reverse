@@ -43,6 +43,51 @@ export function AdsterraBanner728() {
   );
 }
 
+export function AdsterraBanner160() {
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 防止重复加载，确保容器是空的才插入
+    if (bannerRef.current && !bannerRef.current.firstChild) {
+      const conf = document.createElement("script");
+      const script = document.createElement("script");
+
+      // 你的广告位配置
+      conf.type = "text/javascript";
+      conf.innerHTML = `
+        atOptions = {
+            'key' : '991d0b0e32cedb7ecbce91130f28f916',
+            'format' : 'iframe',
+            'height' : 600,
+            'width' : 160,
+            'params' : {}
+        };
+      `;
+
+      // 加载广告脚本
+      script.type = "text/javascript";
+      script.src = "//www.highperformanceformat.com/991d0b0e32cedb7ecbce91130f28f916/invoke.js";
+
+      if (bannerRef.current) {
+        bannerRef.current.append(conf);
+        bannerRef.current.append(script);
+      }
+    }
+  }, []);
+
+  return (
+    // 关键样式：
+    // 1. hidden 2xl:flex -> 只有在超大屏幕(>1536px)才显示，防止遮挡内容
+    // 2. justify-center -> 居中对齐
+    <div
+      className="hidden 2xl:flex justify-center items-center"
+      style={{ width: "160px", height: "600px" }}
+    >
+      <div ref={bannerRef} />
+    </div>
+  );
+}
+
 // 2. 底部原生广告 (已修复 Script 标签和 Flex 布局)
 export function AdsterraNativeBanner() {
   return (

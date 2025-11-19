@@ -6,7 +6,7 @@ import { PythonPanel } from "@/components/python-panel";
 import { JsPanel } from "@/components/js-panel";
 import { WxapkgPanel } from "@/components/wxapkg-panel";
 import { Footer } from "@/components/footer";
-import { AdsterraBanner728, AdsterraNativeBanner } from "@/components/adsterra";
+import { AdsterraBanner160, AdsterraBanner728, AdsterraNativeBanner } from "@/components/adsterra";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"python" | "js" | "wxapkg">(
@@ -16,6 +16,18 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+
+      {/* === 左侧广告 === */}
+      {/* fixed: 固定定位; top-1/2: 垂直居中; left-4: 距离左边4个单位 */}
+      <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10">
+        <AdsterraBanner160 />
+      </div>
+
+      {/* === 右侧广告 === */}
+      {/* right-4: 距离右边4个单位 */}
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-10">
+        <AdsterraBanner160 />
+      </div>
 
       <div className="w-full bg-gray-50 border-b border-gray-100">
         <AdsterraBanner728 />
