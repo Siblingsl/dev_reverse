@@ -81,7 +81,7 @@ export function AdsterraBanner160() {
     // 1. hidden 2xl:flex -> 只有在超大屏幕(>1536px)才显示，防止遮挡内容
     // 2. justify-center -> 居中对齐
     <div
-      className="hidden xl:flex justify-center items-center bg-red-500/20"
+      className="hidden min-[1450px]:flex justify-center items-center"
       style={{ width: "160px", height: "600px" }}
     >
       <div ref={bannerRef} />
