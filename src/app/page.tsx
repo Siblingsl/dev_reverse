@@ -6,7 +6,11 @@ import { PythonPanel } from "@/components/python-panel";
 import { JsPanel } from "@/components/js-panel";
 import { WxapkgPanel } from "@/components/wxapkg-panel";
 import { Footer } from "@/components/footer";
-import { AdsterraBanner160, AdsterraBanner728, AdsterraNativeBanner } from "@/components/adsterra";
+import {
+  AdsterraBanner160,
+  AdsterraBanner728,
+  AdsterraNativeBanner,
+} from "@/components/adsterra";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"python" | "js" | "wxapkg">(
@@ -17,15 +21,15 @@ export default function Home() {
     <div className="flex min-h-screen flex-col relative">
       <Header />
 
-      {/* === 左侧广告 === */}
-      {/* fixed: 固定定位; top-1/2: 垂直居中; left-4: 距离左边4个单位 */}
-      <div className="fixed left-4 top-1/2 -translate-y-1/2 z-10">
+      {/* === 左侧广告 (优化版) === */}
+      {/* 解释：right-[calc(50%+520px)] 意思是：把广告盒子的右边缘，固定在屏幕中心线向左偏移 520px 的位置 */}
+      <div className="fixed right-[calc(50%+520px)] top-1/2 -translate-y-1/2 z-10">
         <AdsterraBanner160 />
       </div>
 
-      {/* === 右侧广告 === */}
-      {/* right-4: 距离右边4个单位 */}
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-10">
+      {/* === 右侧广告 (优化版) === */}
+      {/* 解释：left-[calc(50%+520px)] 意思是：把广告盒子的左边缘，固定在屏幕中心线向右偏移 520px 的位置 */}
+      <div className="fixed left-[calc(50%+520px)] top-1/2 -translate-y-1/2 z-10">
         <AdsterraBanner160 />
       </div>
 
