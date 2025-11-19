@@ -25,13 +25,11 @@ export function AdsterraNativeBanner() {
   );
 }
 
-
 export function AdsterraSocialBar() {
   return (
     <Script
-      src="//pl28086588.effectivegatecpm.com/eb/9c/c8/eb9cc8b78aaa3c27b385d4b37ff9fe54.js"
-      strategy="afterInteractive" 
-      // strategy="lazyOnload" // 如果你觉得它拖慢了网页速度，可以用这个策略
-    />
+      type="text/javascript"
+      src="//pl28086754.effectivegatecpm.com/eb/9c/c8/eb9cc8b78aaa3c27b385d4b37ff9fe54.js"
+    ></Script>
   );
 }
