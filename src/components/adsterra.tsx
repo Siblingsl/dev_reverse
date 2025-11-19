@@ -66,7 +66,8 @@ export function AdsterraBanner160() {
 
       // 加载广告脚本
       script.type = "text/javascript";
-      script.src = "//www.highperformanceformat.com/991d0b0e32cedb7ecbce91130f28f916/invoke.js";
+      script.src =
+        "//www.highperformanceformat.com/991d0b0e32cedb7ecbce91130f28f916/invoke.js";
 
       if (bannerRef.current) {
         bannerRef.current.append(conf);
@@ -80,7 +81,7 @@ export function AdsterraBanner160() {
     // 1. hidden 2xl:flex -> 只有在超大屏幕(>1536px)才显示，防止遮挡内容
     // 2. justify-center -> 居中对齐
     <div
-      className="hidden 2xl:flex justify-center items-center"
+      className="hidden xl:flex justify-center items-center bg-red-500/20"
       style={{ width: "160px", height: "600px" }}
     >
       <div ref={bannerRef} />
