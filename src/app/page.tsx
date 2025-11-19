@@ -6,6 +6,7 @@ import { PythonPanel } from "@/components/python-panel";
 import { JsPanel } from "@/components/js-panel";
 import { WxapkgPanel } from "@/components/wxapkg-panel";
 import { Footer } from "@/components/footer";
+import { AdsterraNativeBanner } from "@/components/adsterra";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"python" | "js" | "wxapkg">(
@@ -15,6 +16,8 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+
+      <AdsterraNativeBanner></AdsterraNativeBanner>
 
       <main className="container mx-auto flex-1 px-5 py-10 max-w-[1000px]">
         {/* Tabs Navigation */}
