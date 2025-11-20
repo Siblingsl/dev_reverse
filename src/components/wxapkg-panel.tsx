@@ -4,6 +4,7 @@ import { useState } from "react";
 import { UploadZone } from "@/components/upload-zone";
 import { EditorBox } from "@/components/editor-box";
 import JSZip from "jszip"; // 📦 引入 JSZip
+import { useSmartAd } from "@/hooks/use-smart-ad";
 
 export function WxapkgPanel() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,6 +14,8 @@ export function WxapkgPanel() {
   // 用于存储生成的 zip Blob，以便下载
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
+  const { resetAdStatus, triggerAd, hasOpenedAd } = useSmartAd();
+
   const handleFile = (uploadedFile: File) => {
     setFile(uploadedFile);
     setStatus(
@@ -20,6 +23,7 @@ export function WxapkgPanel() {
         1
       )}KB)`
     );
+    resetAdStatus();
     setLog(""); // 清空日志
     if (downloadUrl) {
       URL.revokeObjectURL(downloadUrl);
@@ -139,6 +143,7 @@ export function WxapkgPanel() {
 
   const handleDownload = () => {
     if (!downloadUrl) return;
+    triggerAd();
     const a = document.createElement("a");
     a.href = downloadUrl;
     a.download = `${file?.name || "wxapkg"}_unpacked.zip`;
@@ -146,7 +151,11 @@ export function WxapkgPanel() {
   };
 
   return (
-    <div>
+    <div
+      onClick={() => {
+        if ((log || downloadUrl) && !hasOpenedAd) triggerAd();
+      }}
+    >
       <div className="mb-5 text-center">
         <h2 className="mb-2 text-2xl font-semibold">小程序包结构分析</h2>
         <p className="text-sm text-muted-foreground">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { UploadZone } from "@/components/upload-zone";
 import { EditorBox } from "@/components/editor-box";
+import { useSmartAd } from "@/hooks/use-smart-ad";
 
 const SMARTLINK_URL =
   "https://www.effectivegatecpm.com/uf4hx791f?key=95ad2f2d7ede996ba864dd8afeafef89";
@@ -13,24 +14,13 @@ export function PythonPanel() {
   const [status, setStatus] = useState("等待上传文件...");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // ✨ 1. 新增状态：记录当前文件的广告是否已经展示过
-  const [hasOpenedAd, setHasOpenedAd] = useState(false);
-
-  // ✨ 2. 封装 Smartlink 触发逻辑
-  const tryOpenSmartlink = () => {
-    // 只有在“有代码”且“还没弹过广告”时才触发
-    if (code && !hasOpenedAd) {
-      window.open(SMARTLINK_URL, "_blank"); // 在新标签页打开广告
-      setHasOpenedAd(true); // 🔒 上锁：标记为已展示
-    }
-  };
+  const { resetAdStatus, triggerAd, hasOpenedAd } = useSmartAd();
 
   const handleFile = (uploadedFile: File) => {
     setFile(uploadedFile);
     setStatus(`已加载: ${uploadedFile.name}`);
     setCode("");
-    // ✨ 3. 换新文件时，重置广告状态，允许下次触发
-    setHasOpenedAd(false);
+    resetAdStatus();
   };
 
   const handleProcess = async () => {
@@ -57,8 +47,7 @@ export function PythonPanel() {
     setStatus("正在上传并分析...");
     setCode("");
 
-    // ✨ 4. 开始新任务时，也重置广告状态
-    setHasOpenedAd(false);
+    resetAdStatus();
 
     try {
       const formData = new FormData();
@@ -118,7 +107,7 @@ export function PythonPanel() {
     if (!code) return;
 
     // ✨ 5. 在复制前尝试触发广告
-    tryOpenSmartlink();
+    triggerAd();
 
     navigator.clipboard.writeText(code);
     setStatus("已复制到剪贴板");
@@ -129,7 +118,7 @@ export function PythonPanel() {
     if (!code) return;
 
     // ✨ 6. 在下载前尝试触发广告
-    tryOpenSmartlink();
+    triggerAd();
 
     const blob = new Blob([code], { type: "text/x-python" });
     const url = URL.createObjectURL(blob);
@@ -142,10 +131,8 @@ export function PythonPanel() {
 
   return (
     <div
-      // ✨ 7. 可选：如果想在用户点击代码区域（准备手动复制）时也触发，可以在最外层或包裹 EditorBox 的地方加 onClick
       onClick={() => {
-        // 这里的逻辑是：只要用户点了这个区域（不管是点按钮还是点文本框），只要没弹过广告且有代码，就弹
-        if (code && !hasOpenedAd) tryOpenSmartlink();
+        if (code && !hasOpenedAd) triggerAd();
       }}
     >
       <div className="mb-5 text-center">
