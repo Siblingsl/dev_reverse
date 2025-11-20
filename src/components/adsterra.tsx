@@ -93,10 +93,10 @@ export function AdsterraBanner160() {
 export function AdsterraNativeBanner() {
   return (
     <div className="w-full my-8 flex flex-col items-center">
-      {/* 这里的文字标签建议保留，我加了 flex-col 确保它在广告上方 */}
-      <div className="text-xs text-gray-400 mb-2 text-center tracking-widest">
+      {/* ❌ 删除这一段 div，因为我们在 page.tsx 里已经用翻译函数写过了 */}
+      {/* <div className="text-xs text-gray-400 mb-2 text-center tracking-widest">
         - SPONSORED / 推荐资源 -
-      </div>
+      </div> */}
 
       <div
         className="border border-gray-200 rounded-lg p-4 bg-gray-50/50"
@@ -104,15 +104,13 @@ export function AdsterraNativeBanner() {
           display: "flex",
           justifyContent: "center",
           minHeight: "90px",
-          minWidth: "300px", // 给个最小宽度，防止没加载时缩成一团
+          minWidth: "300px",
         }}
       >
         <div id="container-5bac8ea9bbdced29e6a46b214d1ef492"></div>
-
-        {/* 修复：使用 Next.js 的 Script 组件 */}
         <Script
           src="//pl28086588.effectivegatecpm.com/5bac8ea9bbdced29e6a46b214d1ef492/invoke.js"
-          strategy="lazyOnload" // 懒加载，不影响工具使用
+          strategy="lazyOnload"
           data-cfasync="false"
         />
       </div>

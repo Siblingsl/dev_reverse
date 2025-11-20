@@ -1,0 +1,80 @@
+{
+    "HomePage": {
+        "tabs": {
+            "python": "Python 还原",
+            "js": "JS 反混淆",
+            "wxapkg": "小程序解包"
+        },
+        "sponsored": "- 开发者资源推荐 -"
+    },
+    "PythonPanel": {
+        "title": "Python 智能反编译",
+        "subtitle": "通过云端引擎进行深度还原，支持 Python 3.13+ 及其它高版本。",
+        "uploadTitle": "点击上传 .pyc 文件",
+        "uploadSubtitle": "文件将上传至服务器进行分析，支持全版本",
+        "placeholder": "反编译后的源代码将显示在这里...",
+        "statusWait": "等待上传文件...",
+        "btnStart": "开始还原"
+    },
+    "JsPanel": {
+        "title": "JavaScript 代码净化",
+        "subtitle": "格式化、反混淆 Webpack 打包后的 JS 代码。",
+        "uploadTitle": "点击上传文件，或直接在下方粘贴代码",
+        "placeholder": "在此粘贴混淆的 JS 代码...",
+        "statusWait": "就绪",
+        "statusFormat": "正在格式化...",
+        "statusDone": "格式化完成",
+        "btnFormat": "格式化"
+    },
+    "WxapkgPanel": {
+        "title": "小程序包结构分析",
+        "subtitle": "真实解析 .wxapkg 二进制文件，提取所有资源并打包下载。",
+        "uploadTitle": "点击上传 .wxapkg 文件",
+        "uploadSubtitle": "支持微信小程序、小游戏包文件",
+        "placeholder": "解析日志将显示在这里...",
+        "statusWait": "等待文件...",
+        "statusParsing": "正在解析二进制结构...",
+        "statusDone": "✅ 解析完成！请点击右侧下载按钮 👉",
+        "btnDownloadZip": "下载提取包 (ZIP)",
+        "btnStart": "开始解析"
+    },
+    "Common": {
+        "loaded": "已加载: {name}",
+        "error": "错误: {msg}",
+        "copy": "复制",
+        "download": "下载源码",
+        "copied": "已复制到剪贴板"
+    },
+    "Footer": {
+        "links": {
+            "disclaimer": "免责声明",
+            "privacy": "隐私政策",
+            "about": "关于工具"
+        },
+        "copyright": "© 2025 DevReverse · 安全分析工具",
+        "agreement": "使用本站即代表同意免责声明",
+        "modals": {
+            "close": "我已知晓并同意",
+            "disclaimer": {
+                "title": "免责声明",
+                "alert": "特别提示：访问或使用本站任何工具，即视为您已阅读并无条件同意本免责声明的所有条款。若不同意，请立即停止使用。",
+                "p1": "1. <strong>仅供学习</strong>：本站工具仅供技术学习、安全分析和代码审计使用。",
+                "p2": "2. <strong>严禁侵权</strong>：严禁用于恶意破解、去除授权验证或侵犯他人知识产权。",
+                "p3": "3. <strong>免责条款</strong>：使用本站工具产生的任何法律后果由用户自行承担，本站不承担责任。",
+                "p4": "4. <strong>版权归属</strong>：还原后的代码版权归原作者所有，本站不存储任何文件。",
+                "p5": "5. <strong>服务终止</strong>：若发现滥用行为，本站有权在不通知的情况下封禁 IP。"
+            },
+            "privacy": {
+                "title": "隐私政策",
+                "local": "<strong>本地处理：</strong>JS 反混淆和小程序解包均在浏览器本地完成，数据不离机。",
+                "cloud": "<strong>云端处理：</strong>Python 反编译需经过服务器转发至第三方引擎，处理后立即删除，不留存文件。",
+                "warning": "<strong>警告：</strong>请勿上传包含机密信息（如密码、密钥）的文件。"
+            },
+            "about": {
+                "title": "关于工具",
+                "desc": "DevReverse 是一个面向开发者的在线代码分析工具箱，致力于简化逆向工程流程，辅助进行代码审计与安全合规检查。",
+                "contact": "联系开发者: shi510683@gmail.com"
+            }
+        }
+    }
+}

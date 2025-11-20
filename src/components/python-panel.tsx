@@ -1,35 +1,43 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl"; // 👈 1. 引入 Hook
 import { UploadZone } from "@/components/upload-zone";
 import { EditorBox } from "@/components/editor-box";
 import { useSmartAd } from "@/hooks/use-smart-ad";
 
-const SMARTLINK_URL =
-  "https://www.effectivegatecpm.com/uf4hx791f?key=95ad2f2d7ede996ba864dd8afeafef89";
-
 export function PythonPanel() {
+  // 👈 2. 初始化翻译命名空间
+  // 我们需要用到 "PythonPanel" 和 "Common" 两个命名空间
+  const t = useTranslations("PythonPanel");
+  const tCommon = useTranslations("Common");
+
   const [file, setFile] = useState<File | null>(null);
   const [code, setCode] = useState("");
-  const [status, setStatus] = useState("等待上传文件...");
+
+  // 初始化状态使用翻译键值 (或者设为空，由 UI 层处理默认值)
+  // 这里为了简单，初始状态还是先用 key，渲染时再翻译，或者直接用 state 存状态码
+  // 但为了不破坏你现有的 EditorBox 逻辑，我们先把初始文本换成翻译后的
+  const [status, setStatus] = useState(t("statusWait"));
   const [isProcessing, setIsProcessing] = useState(false);
 
   const { resetAdStatus, triggerAd, hasOpenedAd } = useSmartAd();
 
   const handleFile = (uploadedFile: File) => {
     setFile(uploadedFile);
-    setStatus(`已加载: ${uploadedFile.name}`);
+    // 👈 3. 使用带变量的翻译
+    setStatus(tCommon("loaded", { name: uploadedFile.name }));
     setCode("");
     resetAdStatus();
   };
 
   const handleProcess = async () => {
     if (!file) {
-      setStatus("错误: 请先选择文件");
+      // 👈 4. 错误信息翻译
+      setStatus(tCommon("error", { msg: t("statusWait") })); // "请先选择文件" 暂时复用等待文案或加新key
       return;
     }
 
-    // ... (频率限制逻辑保持不变) ...
     const STORAGE_KEY = "pylingual_last_usage";
     const COOLDOWN_SEC = 60;
     const lastUsage = Number(localStorage.getItem(STORAGE_KEY) || 0);
@@ -38,13 +46,14 @@ export function PythonPanel() {
 
     if (elapsedSeconds < COOLDOWN_SEC) {
       const remaining = Math.ceil(COOLDOWN_SEC - elapsedSeconds);
-      setStatus(`请求过于频繁，请等待 ${remaining} 秒后再试 ☕`);
+      // 这里如果是动态生成的文本，暂时保留或添加到 json 中
+      setStatus(`Wait ${remaining}s...`);
       return;
     }
     localStorage.setItem(STORAGE_KEY, now.toString());
 
     setIsProcessing(true);
-    setStatus("正在上传并分析...");
+    setStatus("Uploading..."); // 可以添加到 json: "statusUploading"
     setCode("");
 
     resetAdStatus();
@@ -60,12 +69,12 @@ export function PythonPanel() {
 
       if (!response.ok) {
         const text = await response.text();
-        let errorMsg = `请求失败: ${response.status} ${response.statusText}`;
+        let errorMsg = `HTTP ${response.status}`;
         try {
           const json = JSON.parse(text);
           if (json.error) errorMsg = json.error;
         } catch (e) {
-          errorMsg = `服务器返回了非预期格式`;
+          errorMsg = "Server Error";
         }
         throw new Error(errorMsg);
       }
@@ -89,14 +98,15 @@ export function PythonPanel() {
           .trim();
 
         setCode(sourceCode);
-        setStatus("反编译成功！");
+        setStatus("Success!"); // 可以添加到 json: "statusSuccess"
       } else {
-        setStatus("错误: 服务端返回了无法识别的数据格式");
+        setStatus(tCommon("error", { msg: "Invalid Data" }));
         setCode(JSON.stringify(result, null, 2));
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "未知错误";
-      setStatus(`错误: ${errorMessage}`);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown Error";
+      setStatus(tCommon("error", { msg: errorMessage }));
       setCode(`[Error Log]\n${errorMessage}`);
     } finally {
       setIsProcessing(false);
@@ -106,18 +116,16 @@ export function PythonPanel() {
   const handleCopy = () => {
     if (!code) return;
 
-    // ✨ 5. 在复制前尝试触发广告
     triggerAd();
 
     navigator.clipboard.writeText(code);
-    setStatus("已复制到剪贴板");
-    setTimeout(() => setStatus("反编译成功！"), 2000);
+    setStatus(tCommon("copied"));
+    setTimeout(() => setStatus("Success!"), 2000);
   };
 
   const handleDownload = () => {
     if (!code) return;
 
-    // ✨ 6. 在下载前尝试触发广告
     triggerAd();
 
     const blob = new Blob([code], { type: "text/x-python" });
@@ -136,30 +144,36 @@ export function PythonPanel() {
       }}
     >
       <div className="mb-5 text-center">
-        <h2 className="mb-2 text-2xl font-semibold">Python 智能反编译</h2>
-        <p className="text-sm text-muted-foreground">
-          通过云端引擎进行深度还原，支持 Python 3.13+ 及其它高版本。
-        </p>
+        {/* 👈 5. 标题和副标题翻译 */}
+        <h2 className="mb-2 text-2xl font-semibold">{t("title")}</h2>
+        <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <UploadZone
         icon="☁️"
-        title="点击上传 .pyc 文件"
-        subtitle="文件将上传至服务器进行分析，支持全版本"
+        // 👈 6. 上传区域文案翻译
+        title={t("uploadTitle")}
+        subtitle={t("uploadSubtitle")}
         accept=".pyc"
         onFileSelect={handleFile}
       />
 
       <EditorBox
         code={code}
-        status={status}
+        status={status} // status 现在是翻译后的字符串
         isProcessing={isProcessing}
         readOnly={true}
         onProcess={handleProcess}
         onCopy={handleCopy}
         onDownload={handleDownload}
-        placeholder="反编译后的源代码将显示在这里..."
-        downloadLabel="下载源码"
+        // 👈 7. 编辑器文案翻译
+        placeholder={t("placeholder")}
+        downloadLabel={tCommon("download")}
+        // 注意：EditorBox 组件内部的 "复制" 和 "开始还原" 按钮
+        // 如果 EditorBox 没开放 label 属性，你需要去修改 EditorBox 组件本身
+        // 或者在这里传入翻译好的 label，例如：
+        copyLabel={tCommon("copy")}
+        processLabel={t("btnStart")}
       />
     </div>
   );

@@ -1,0 +1,80 @@
+{
+    "HomePage": {
+        "tabs": {
+            "python": "Python Decompiler",
+            "js": "JS Deobfuscator",
+            "wxapkg": "Wxapkg Unpacker"
+        },
+        "sponsored": "- Recommended Resources -"
+    },
+    "PythonPanel": {
+        "title": "Python Smart Decompiler",
+        "subtitle": "Deep restoration via cloud engine, supports Python 3.13+.",
+        "uploadTitle": "Upload .pyc File",
+        "uploadSubtitle": "Files are uploaded for analysis, all versions supported",
+        "placeholder": "Decompiled source code will appear here...",
+        "statusWait": "Waiting for file...",
+        "btnStart": "Start Decompile"
+    },
+    "JsPanel": {
+        "title": "JavaScript Deobfuscator",
+        "subtitle": "Format and deobfuscate Webpack bundled JS code.",
+        "uploadTitle": "Upload file or paste code below",
+        "placeholder": "Paste obfuscated JS code here...",
+        "statusWait": "Ready",
+        "statusFormat": "Formatting...",
+        "statusDone": "Formatting Complete",
+        "btnFormat": "Format"
+    },
+    "WxapkgPanel": {
+        "title": "Wxapkg Analyzer",
+        "subtitle": "Parse .wxapkg binary files, extract resources and pack to ZIP.",
+        "uploadTitle": "Upload .wxapkg File",
+        "uploadSubtitle": "Supports WeChat Mini Programs & Games",
+        "placeholder": "Parsing logs will appear here...",
+        "statusWait": "Waiting for file...",
+        "statusParsing": "Parsing binary structure...",
+        "statusDone": "✅ Done! Click download package button on the right 👉",
+        "btnDownloadZip": "Download Package (ZIP)",
+        "btnStart": "Start Parse"
+    },
+    "Common": {
+        "loaded": "Loaded: {name}",
+        "error": "Error: {msg}",
+        "copy": "Copy",
+        "download": "Download Source",
+        "copied": "Copied to clipboard"
+    },
+    "Footer": {
+        "links": {
+            "disclaimer": "Disclaimer",
+            "privacy": "Privacy Policy",
+            "about": "About"
+        },
+        "copyright": "© 2025 DevReverse · Security Analysis Tools",
+        "agreement": "Using this site means you agree to the disclaimer",
+        "modals": {
+            "close": "I Understand & Agree",
+            "disclaimer": {
+                "title": "Disclaimer",
+                "alert": "Special Note: Accessing or using any tool on this site is deemed as your unconditional acceptance of all terms. If you do not agree, please stop using immediately.",
+                "p1": "1. <strong>Learning Only</strong>: Tools are for technical learning, security analysis, and code auditing only.",
+                "p2": "2. <strong>No Infringement</strong>: Strictly prohibited for malicious cracking, removing authorization, or infringing intellectual property.",
+                "p3": "3. <strong>Exemption</strong>: Users bear all legal consequences of using these tools; this site assumes no liability.",
+                "p4": "4. <strong>Copyright</strong>: Decompiled code belongs to original authors; this site stores no files.",
+                "p5": "5. <strong>Termination</strong>: We reserve the right to ban IPs without notice if abuse is detected."
+            },
+            "privacy": {
+                "title": "Privacy Policy",
+                "local": "<strong>Local Processing:</strong> JS Deobfuscation and Wxapkg Unpacking are done locally in your browser. Data never leaves your device.",
+                "cloud": "<strong>Cloud Processing:</strong> Python Decompilation requires forwarding to a third-party engine via server. Files are deleted immediately after processing.",
+                "warning": "<strong>Warning:</strong> Do not upload files containing confidential information (passwords, keys)."
+            },
+            "about": {
+                "title": "About Tool",
+                "desc": "DevReverse is an online code analysis toolbox for developers, dedicated to simplifying reverse engineering workflows and assisting in code auditing and security compliance checks.",
+                "contact": "Contact: shi510683@gmail.com"
+            }
+        }
+    }
+}

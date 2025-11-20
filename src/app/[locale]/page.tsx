@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl"; // 👈 1. 引入 Hook
 import { Header } from "@/components/header";
 import { PythonPanel } from "@/components/python-panel";
 import { JsPanel } from "@/components/js-panel";
@@ -13,6 +14,9 @@ import {
 } from "@/components/adsterra";
 
 export default function Home() {
+  // 👈 2. 初始化翻译函数，使用 "HomePage" 命名空间
+  const t = useTranslations("HomePage");
+
   const [activeTab, setActiveTab] = useState<"python" | "js" | "wxapkg">(
     "python"
   );
@@ -22,17 +26,16 @@ export default function Home() {
       <Header />
 
       {/* === 左侧广告 (优化版) === */}
-      {/* 解释：right-[calc(50%+520px)] 意思是：把广告盒子的右边缘，固定在屏幕中心线向左偏移 520px 的位置 */}
       <div className="fixed right-[calc(50%+520px)] top-1/2 -translate-y-1/2 z-10">
         <AdsterraBanner160 />
       </div>
 
       {/* === 右侧广告 (优化版) === */}
-      {/* 解释：left-[calc(50%+520px)] 意思是：把广告盒子的左边缘，固定在屏幕中心线向右偏移 520px 的位置 */}
       <div className="fixed left-[calc(50%+520px)] top-1/2 -translate-y-1/2 z-10">
         <AdsterraBanner160 />
       </div>
 
+      {/* 顶部横幅广告 */}
       <div className="w-full bg-gray-50 border-b border-gray-100">
         <AdsterraBanner728 />
       </div>
@@ -48,7 +51,8 @@ export default function Home() {
                 : "text-muted-foreground border-transparent hover:text-blue-600"
             }`}
           >
-            Python 还原
+            {/* 👈 3. 使用翻译键值 */}
+            {t("tabs.python")}
           </button>
           <button
             onClick={() => setActiveTab("js")}
@@ -58,7 +62,7 @@ export default function Home() {
                 : "text-muted-foreground border-transparent hover:text-blue-600"
             }`}
           >
-            JS 反混淆
+            {t("tabs.js")}
           </button>
           <button
             onClick={() => setActiveTab("wxapkg")}
@@ -68,7 +72,7 @@ export default function Home() {
                 : "text-muted-foreground border-transparent hover:text-blue-600"
             }`}
           >
-            小程序解包
+            {t("tabs.wxapkg")}
           </button>
         </div>
 
@@ -79,9 +83,10 @@ export default function Home() {
           {activeTab === "wxapkg" && <WxapkgPanel />}
         </div>
 
+        {/* 底部原生广告 */}
         <div className="mt-16">
           <div className="text-center text-sm text-gray-400 mb-2">
-            - 开发者资源推荐 -
+            {t("sponsored")} {/* 这里会自动显示中文或英文标题 */}
           </div>
           <AdsterraNativeBanner />
         </div>
