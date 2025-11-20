@@ -4,17 +4,33 @@ import { useState } from "react";
 import { UploadZone } from "@/components/upload-zone";
 import { EditorBox } from "@/components/editor-box";
 
+const SMARTLINK_URL =
+  "https://www.effectivegatecpm.com/uf4hx791f?key=95ad2f2d7ede996ba864dd8afeafef89";
+
 export function PythonPanel() {
   const [file, setFile] = useState<File | null>(null);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("等待上传文件...");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // ✨ 1. 新增状态：记录当前文件的广告是否已经展示过
+  const [hasOpenedAd, setHasOpenedAd] = useState(false);
+
+  // ✨ 2. 封装 Smartlink 触发逻辑
+  const tryOpenSmartlink = () => {
+    // 只有在“有代码”且“还没弹过广告”时才触发
+    if (code && !hasOpenedAd) {
+      window.open(SMARTLINK_URL, "_blank"); // 在新标签页打开广告
+      setHasOpenedAd(true); // 🔒 上锁：标记为已展示
+    }
+  };
+
   const handleFile = (uploadedFile: File) => {
     setFile(uploadedFile);
     setStatus(`已加载: ${uploadedFile.name}`);
-    // 每次选择新文件时清空旧代码
     setCode("");
+    // ✨ 3. 换新文件时，重置广告状态，允许下次触发
+    setHasOpenedAd(false);
   };
 
   const handleProcess = async () => {
@@ -23,77 +39,56 @@ export function PythonPanel() {
       return;
     }
 
-    // ============================================================
-    // 🕒 新增：频率限制逻辑 (Rate Limiting)
-    // ============================================================
+    // ... (频率限制逻辑保持不变) ...
     const STORAGE_KEY = "pylingual_last_usage";
-    const COOLDOWN_SEC = 60; // 冷却时间：60秒
-
-    // 1. 获取上次使用时间
+    const COOLDOWN_SEC = 60;
     const lastUsage = Number(localStorage.getItem(STORAGE_KEY) || 0);
     const now = Date.now();
     const elapsedSeconds = (now - lastUsage) / 1000;
 
-    // 2. 判断是否还在冷却中
     if (elapsedSeconds < COOLDOWN_SEC) {
       const remaining = Math.ceil(COOLDOWN_SEC - elapsedSeconds);
       setStatus(`请求过于频繁，请等待 ${remaining} 秒后再试 ☕`);
-      return; // 直接阻断请求
+      return;
     }
-
-    // 3. 记录本次使用时间 (在发起请求前记录，防止并发点击)
     localStorage.setItem(STORAGE_KEY, now.toString());
 
     setIsProcessing(true);
     setStatus("正在上传并分析...");
-    setCode(""); // 清空之前的结果
+    setCode("");
+
+    // ✨ 4. 开始新任务时，也重置广告状态
+    setHasOpenedAd(false);
 
     try {
-      // 1. 准备表单数据
       const formData = new FormData();
       formData.append("file", file);
 
-      // 2. 请求我们自己的 Next.js 后端 API (代理)
-      // 注意：这里不需要写完整的 https://...，用相对路径即可
       const response = await fetch("/api/server", {
         method: "POST",
         body: formData,
       });
 
-      // 3. 处理 HTTP 错误
       if (!response.ok) {
-        // 尝试读取文本内容，因为可能返回的是 HTML 报错页面
         const text = await response.text();
         let errorMsg = `请求失败: ${response.status} ${response.statusText}`;
-
         try {
-          // 尝试解析 JSON 错误信息
           const json = JSON.parse(text);
           if (json.error) errorMsg = json.error;
         } catch (e) {
-          // 如果不是 JSON，说明返回了 HTML 页面（比如 404 或 500）
-          console.error("非 JSON 响应:", text.slice(0, 500)); // 打印前500个字符看看是啥
-          errorMsg = `服务器返回了非预期格式 (可能路径错误或服务器崩溃)`;
+          errorMsg = `服务器返回了非预期格式`;
         }
-
         throw new Error(errorMsg);
       }
 
-      // 4. 获取最终 JSON 结果
       const result = await response.json();
-
-      // 5. 提取源码
-      // 根据你提供的 JSON 结构：root -> editor_content -> file_raw_python -> editor_content
       let sourceCode = result?.editor_content?.file_raw_python?.editor_content;
 
       if (sourceCode) {
-        // 🧹 新增：清理头部元数据注释
-        // 我们把字符串按行分割，过滤掉不想显示的行，再重新拼接回去
         sourceCode = sourceCode
           .split("\n")
           .filter((line: string) => {
             const t = line.trim();
-            // 过滤掉包含特定关键词的注释行
             return !(
               t.startsWith("# Decompiled with PyLingual") ||
               t.startsWith("# Internal filename:") ||
@@ -102,17 +97,15 @@ export function PythonPanel() {
             );
           })
           .join("\n")
-          .trim(); // 去除首尾多余的空白字符
+          .trim();
 
         setCode(sourceCode);
         setStatus("反编译成功！");
       } else {
-        console.error("无法解析返回结果:", result);
         setStatus("错误: 服务端返回了无法识别的数据格式");
-        setCode(JSON.stringify(result, null, 2)); // 调试用：把原始 JSON 显示出来
+        setCode(JSON.stringify(result, null, 2));
       }
     } catch (error) {
-      console.error(error);
       const errorMessage = error instanceof Error ? error.message : "未知错误";
       setStatus(`错误: ${errorMessage}`);
       setCode(`[Error Log]\n${errorMessage}`);
@@ -123,6 +116,10 @@ export function PythonPanel() {
 
   const handleCopy = () => {
     if (!code) return;
+
+    // ✨ 5. 在复制前尝试触发广告
+    tryOpenSmartlink();
+
     navigator.clipboard.writeText(code);
     setStatus("已复制到剪贴板");
     setTimeout(() => setStatus("反编译成功！"), 2000);
@@ -130,6 +127,10 @@ export function PythonPanel() {
 
   const handleDownload = () => {
     if (!code) return;
+
+    // ✨ 6. 在下载前尝试触发广告
+    tryOpenSmartlink();
+
     const blob = new Blob([code], { type: "text/x-python" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -140,7 +141,13 @@ export function PythonPanel() {
   };
 
   return (
-    <div>
+    <div
+      // ✨ 7. 可选：如果想在用户点击代码区域（准备手动复制）时也触发，可以在最外层或包裹 EditorBox 的地方加 onClick
+      onClick={() => {
+        // 这里的逻辑是：只要用户点了这个区域（不管是点按钮还是点文本框），只要没弹过广告且有代码，就弹
+        if (code && !hasOpenedAd) tryOpenSmartlink();
+      }}
+    >
       <div className="mb-5 text-center">
         <h2 className="mb-2 text-2xl font-semibold">Python 智能反编译</h2>
         <p className="text-sm text-muted-foreground">
@@ -160,7 +167,7 @@ export function PythonPanel() {
         code={code}
         status={status}
         isProcessing={isProcessing}
-        readOnly={true} // 结果通常只读，或者是可编辑的源码
+        readOnly={true}
         onProcess={handleProcess}
         onCopy={handleCopy}
         onDownload={handleDownload}
