@@ -8,7 +8,9 @@ import { routing } from "@/i18n/routing";
 import { AdsterraSocialBar } from "@/components/adsterra";
 
 // ⚠️ 注意：因为文件移动到了 [locale] 文件夹，这里的路径需要向上跳两级
-import "@/app/globals.css"
+import "@/app/globals.css";
+
+export const runtime = "edge";
 
 const geist = Geist({
   subsets: ["latin"],
